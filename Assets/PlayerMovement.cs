@@ -5,17 +5,16 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 12f;
-    public float jumpSpeed = 50f;
-    public float gravity = -9.8f;
-
-    private Vector3 gravityVelocity;
-
+    public float jumpHeight = 5;
+    public float gravity = -15.8f;
     public CharacterController controller;
+
+    private Vector3 velocity;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = gameObject.GetComponent<CharacterController>();
+        controller = gameObject.GetComponent<CharacterController>(); // Automatically assign the controller
     }
 
     // Update is called once per frame
@@ -27,17 +26,16 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveDirection = transform.right * horizontal + transform.forward * vertical; // moving forward direction = current forward direction
         controller.Move(moveDirection * moveSpeed * Time.deltaTime);
 
-        // Gravity:
-        gravityVelocity.y += gravity * Time.deltaTime; // increase the falling velocity as the in-air time longer
-        controller.Move(gravityVelocity * Time.deltaTime); // moving downwards to simulate gravity
+        // Simulate gravity:
+        velocity.y += gravity * Time.deltaTime; // increase the falling velocity as the in-air time longer
+        controller.Move(velocity * Time.deltaTime); // moving downwards to simulate gravity
 
         // Ground check:
         if (IsGrounded()) {
-            if (Input.GetKeyDown(KeyCode.Space)) {
-                Vector3 jumpDirection = transform.up * jumpSpeed;
-                controller.Move(jumpDirection * jumpSpeed * Time.deltaTime);
+            velocity.y = 0; // reset gravity velocity y to 0, otherwise the falling speed keep increasing over time
+            if (Input.GetButtonDown("Jump")) {
+                velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity); // apply jump velocity equation
             }
-            gravityVelocity.y = 0; // reset gravity velocity y to 0, otherwise the falling speed keep increasing over time
         }
     }
 
