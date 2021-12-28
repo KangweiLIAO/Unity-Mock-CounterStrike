@@ -29,11 +29,11 @@ public class Gun : MonoBehaviour {
         // Raycast(origin, direction) within "fireRange"; store hit game object info in "hit":
         bool isHit = Physics.Raycast(fpsCam.transform.position, fpsCam.transform.forward, out hit, fireRange);
         if (isHit) {
-            Debug.Log(hit.transform.name);
+            // Debug.Log(hit.transform.name);
             Debug.DrawLine(fpsCam.transform.position, hit.point, Color.green, 5f);
             Enermy target = hit.transform.GetComponent<Enermy>();
             if (target != null) {
-                target.TakeDamage(10f);   
+                target.TakeDamage(10f);
             }
         }
         // instantiate the impactEffect at the surface, such that the effect direction = hit surface norm direction
